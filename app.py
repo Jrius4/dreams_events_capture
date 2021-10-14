@@ -1,9 +1,15 @@
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 
-wb_tracker = load_workbook("ALL GIRLS NAMES.xlsx")
+wb_tracker = load_workbook("all_girls.xlsx")
+wb_events = load_workbook("eventList.xlsx")
 # eventList.xlsx
-ws_events = wb_tracker["EVENTS"]
-ws_girls = wb_tracker["ALLGIRLS"]
+# ws_events = wb_tracker.active
+# ws_girls = wb_events.active
+
+ws_girls = wb_tracker.active
+ws_events = wb_events.active
+
+
 
 events_names = []
 tracker_names = []
@@ -15,16 +21,17 @@ for row in ws_events.iter_rows(min_row=2,min_col=11,max_col=11,max_row=max_rows_
     events_names.append(row[0])
 
 print(events_names)
-print("\n\n")
+# print("\n\n")
 
 max_rows_t = ws_girls.max_row
 max_colum_t= ws_girls.max_column
 mer_in = []
 mer_not = []
+ws_girls_data = []
 for row in ws_girls.iter_rows(min_row=2,min_col=1,max_col=max_colum_t,max_row=1128,values_only=True):
-    # ws_girls.append(row)
-    # print(row)
-    if row[1] in events_names:
+    ws_girls_data.append(row)
+    print(row[5])
+    if row[5] in events_names:
         # print("yes")
         mer_in.append(row)
     else:
@@ -46,12 +53,13 @@ print(len(mer_in))
 print("\n\n")
 print("\n\n")
 print("\n\n")
-
-if 'not_in_capture' in wb_tracker.sheetnames:
-    print('not_in_capture exists')
-    ws2 = wb_tracker['not_in_capture']
-else:
-   ws2 = wb_tracker.create_sheet(title='not_in_capture')
+wb_data = Workbook()
+# if 'not_in_capture' in wb_tracker.sheetnames:
+#     print('not_in_capture exists')
+#     ws2 = wb_data['not_in_capture']
+# else:
+#    ws2 = wb_data.create_sheet(title='not_in_capture')
+ws2 = wb_data.active
 
 ws2.cell(row=1,column=1,value='dreams_id')
 ws2.cell(row=1,column=2,value='fullnames')
@@ -65,4 +73,4 @@ for i,j in enumerate(mer_not):
     print("\n\n")
     print("\n\n")
 
-wb_tracker.save("output/results.xlsx")
+wb_data.save("output/results.xlsx")
